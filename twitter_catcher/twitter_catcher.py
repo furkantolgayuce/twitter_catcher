@@ -1,21 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jul 25 14:52:39 2019
+Created on Jul 2019
 
-@author: tolga
+@author: Furkan Tolga Yüce
 """
 
 # Kütüphaneler
-import tweepy, codecs
+import tweepy
 import pandas as pd
 import sqlite3 as sql #sql
 
-class twitter_data_bot:
+class twitter_catcher:
     def __init__(self):
-        self.search_key = "#pazartesi"
-
-
+        pass
     def login(self):
         # Read File Keys and Tokens
         with open("key_token.txt") as f: 
@@ -29,19 +27,18 @@ class twitter_data_bot:
         auth.set_access_token(access_token, access_token_secret)
         api = tweepy.API(auth)
         return api
-        
-    def search_bot(self):
-        # Aranacak Kelime
-        api = self.login()
-        tweetler = api.search(q = self.search_key, 
-                              lang = "tr", 
-                              result_type = "recent",
-                              tweet_mode='extended',
-                              count = 100)
-        return tweetler
+
+    def search(self,api,search_key,max_tweets = 200):
+        # Max tweets
+        return [status for status in tweepy.Cursor(api.search,
+                                                       q=search_key,
+                                                       lang = "tr",
+                                                       result_type = "recent",
+                                                       tweet_mode='extended').items(max_tweets)], search_key
     
-    def search_df(self):
-        tweetler = self.search_bot()
+
+    def dataframe(self,search_all):
+        tweetler,search_key = search_all[0],search_all[1]
         id_list = [tweet.id for tweet  in tweetler]
         df = pd.DataFrame(id_list, columns = ["id"])
         
@@ -61,17 +58,22 @@ class twitter_data_bot:
         df["user_verified"] = [tweet.user.verified for tweet in tweetler]
         df["user_location"] = [tweet.author.location for tweet in tweetler]
         df["Hashtags"] = [tweet.entities.get('hashtags') for tweet in tweetler]
-        df["search_key"] = [self.search_key for tweet in tweetler]
+        df["search_key"] = [search_key for tweet in tweetler]
         
         return df
     
-    def to_sql(self):
-        df = self.search_df()
+    def to_sql(self,df):
+        # Tarih Al
+        from datetime import datetime
+        an = datetime.now()
+        tarih = datetime.strftime(an, '%Y-%U')
+        
         df = df.astype('str')
         
-        conn = sql.connect("twitter.db")
+        conn = sql.connect((tarih+".db"))
         
-        df.to_sql(name = "twitter",
+        df.to_sql(name = df["search_key"][0],
           con = conn,
           if_exists = "append",
           index = False,)
+        
