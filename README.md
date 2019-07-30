@@ -58,7 +58,7 @@ SQL içerisindeki tablo ismini **search** değişkeninde tanımladığınız **a
 
 
 
-### Gereklilikler Ve Kurulum
+## Gereklilikler Ve Kurulum
 
 Twitter_catcher'ı kullanabilmeniz için 
 
