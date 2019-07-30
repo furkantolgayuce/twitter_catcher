@@ -4,7 +4,7 @@ Twitter Catcher ile yapay zeka projeleriniz için twitter içerisinden tweetleri
 
 ## Başlarken
 
-Twitter Catcher, Twitter api'sini kullanır. API'nin size sağladığı keyleri ve tokenları `key_token.txt` dosyasına alt alta yazmanız gerekiyor.
+Twitter Catcher, Twitter api'sini kullanır. API'nin size sağladığı keyleri ve tokenları `key_token.txt` dosyasına alt alta yazmanız gerekmektedir.
 
 **example** klasörü içerisindeki **search.py** dosyasında örnek bir kullanım senaryosu mevcut.
 
@@ -41,6 +41,12 @@ search = bot.search(api,"#pazartesi",200)
 ```
 df = bot.dataframe(search)
 ```
+
+### Excel'e aktarma
+
+Edindiğimiz bilgilerin kaybolmaması için excell içerisinde saklayabilirsiniz. Bunun için oluşturduğunuz dataframe'i `to_excel()` metoduyla excel'e aktarabilirsiniz.
+
+Excel dosyası adını **search** değişkeninde tanımladığınız **aranan kelime**'den almıştır.
 
 ### SQL'e aktarma
 

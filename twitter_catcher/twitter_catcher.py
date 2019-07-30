@@ -75,5 +75,8 @@ class twitter_catcher:
         df.to_sql(name = df["search_key"][0],
           con = conn,
           if_exists = "append",
-          index = False,)
-        
+          index = False)
+    def to_excel(self,df):        
+        df = df.astype('str')
+        name = df["search_key"][0] +".xlsx"
+        df.to_excel(name)
